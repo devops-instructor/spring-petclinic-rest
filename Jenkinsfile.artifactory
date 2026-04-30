@@ -8,6 +8,7 @@ pipeline {
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+        ARTIFACTORY_CREDENTIALS = credentials('artifactory-credentials')
     }    
     stages {
         // stage('Forma 1 - Artifactory - RtMaven') {
@@ -41,7 +42,12 @@ pipeline {
             steps {
                 echo 'Forma 2 - Artifactory - File Spec'
 
-                sh 'mvn clean package -B -DskipTests'
+                // sh 'mvn clean package -B -DskipTests'
+
+                withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
+                    sh 'env | sort'
+                    sh 'mvn clean package -B -DskipTests -s ${M2_SETTINGS}'
+                }                
 
                 script{
                     def releaseRepo = 'spring-petclinic-rest-release'
