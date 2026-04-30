@@ -17,6 +17,7 @@ pipeline {
 
                     sh 'env | sort'
                     sh 'mvn --version'
+                    env.MAVEN_HOME = '/usr/share/maven'
 
                     def releases = 'spring-petclinic-rest-release'
                     def snapshots = 'spring-petclinic-rest-snapshot'
