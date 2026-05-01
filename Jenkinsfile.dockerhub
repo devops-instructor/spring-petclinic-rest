@@ -35,6 +35,7 @@ pipeline {
 
                     sh 'docker build --help'
                     sh "docker build -t danycenas/${pom.artifactId}:${pom.version} ."
+                    sh 'docker images'
 
                     // def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
                     // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
