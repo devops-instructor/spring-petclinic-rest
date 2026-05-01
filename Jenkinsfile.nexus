@@ -10,11 +10,41 @@ pipeline {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
     }    
     stages {
-        stage('Nexus') {
+        stage('Package') {
             steps {
-                echo 'Nexus stage'
+                sh 'mvn clean package -B -DskipTests'
             }
         }
+        stage('Nexus') {
+            steps {
+                script {
+
+                    sh 'env | sort'
+
+                    def pom = readMavenPom file: 'pom.xml'
+                    println pom
+
+                    nexusPublisher nexusInstanceId: 'nexus',
+                    nexusRepositoryId: 'spring-petclinic-rest-release',
+                    packages: [[$class: 'MavenPackage',
+                        mavenAssetList: [
+                            [
+                                classifier: '', 
+                                extension: '', 
+                                filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"
+                            ]
+                        ],
+                        mavenCoordinate: [
+                            groupId: "${pom.groupId}",
+                            artifactId: "${pom.artifactId}",
+                            packaging: "${pom.packaging}",
+                            version: "${pom.version}"
+                        ]
+                    ]]            
+
+                }
+            }
+        }        
     }
     post { 
         cleanup {
