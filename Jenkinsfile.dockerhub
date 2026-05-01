@@ -15,9 +15,15 @@ pipeline {
             }
         }       
         stage('DockerHub') {
-            agent any
+            agent {
+                docker {
+                    image 'docker:29.4.0-cli'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            options { skipDefaultCheckout() }
             steps {
-                echo 'Publishing to DockerHub...'
+                sh 'docker --version'
             }
         }        
     }
