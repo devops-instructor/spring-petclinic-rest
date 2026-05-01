@@ -25,7 +25,7 @@ pipeline {
                     println pom
 
                     nexusPublisher nexusInstanceId: 'nexus',
-                    nexusRepositoryId: 'spring-petclinic-rest-snapshot',
+                    nexusRepositoryId: 'spring-petclinic-rest-release',
                     packages: [[$class: 'MavenPackage',
                         mavenAssetList: [
                             [
