@@ -39,12 +39,15 @@ pipeline {
                     // Forma 1: Usando docker build para misma plataforma del host
 
                     // sh 'docker build --help'
-                    sh "docker build -t danycenas/${pom.artifactId}:${pom.version} ."
+
+                    def image = "danycenas/${pom.artifactId}"
+
+                    sh "docker build -t ${image}:${pom.version} . -t ${image}:latest"
                     sh 'docker images'
 
                     sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                    sh "docker push danycenas/${pom.artifactId}:${pom.version}"
-                    sh "docker push danycenas/${pom.artifactId}:latest"
+                    sh "docker push ${image}:${pom.version}"
+                    sh "docker push ${image}:latest"
                     sh 'docker logout'
 
                     // def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
