@@ -1,0 +1,24 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.15-eclipse-temurin-21'
+            // image 'maven:3.8.8-eclipse-temurin-21'
+            // image 'maven:3.9.15-amazoncorretto-21'
+        }
+    }
+    environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+    }    
+    stages {
+        stage('Nexus') {
+            steps {
+                echo 'Nexus stage'
+            }
+        }
+    }
+    post { 
+        cleanup {
+            cleanWs()
+        }
+    }
+}
