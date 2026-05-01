@@ -15,7 +15,7 @@ pipeline {
         }       
         stage('DockerHub') {
             steps {
-                echo 'DockerHub'
+                sh 'docker --version'
             }
         }        
     }
