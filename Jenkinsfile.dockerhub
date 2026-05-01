@@ -1,21 +1,22 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.15-eclipse-temurin-21'
-        }
-    }
-    environment {
-        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
-    }    
+    agent none
     stages {
         stage('Package') {
+            agent {
+                docker {
+                    image 'maven:3.9.15-eclipse-temurin-21'
+                }
+            }
+            environment {
+                MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+            }
             steps {
                 sh 'mvn clean package -B -ntp -DskipTests'
             }
         }       
         stage('DockerHub') {
             steps {
-                sh 'docker --version'
+                echo 'Publishing to DockerHub...'
             }
         }        
     }
