@@ -24,6 +24,7 @@ pipeline {
             }
             options { skipDefaultCheckout() }
             steps {
+                sh 'ls -la'
                 sh 'docker --version'
                 sh 'docker images'
 
