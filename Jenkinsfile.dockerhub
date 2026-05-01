@@ -28,7 +28,7 @@ pipeline {
             }            
             options { skipDefaultCheckout() }
             steps {
-                sh 'ls -la'
+                // sh 'ls -la'
                 sh 'docker --version'
                 sh 'docker images'
 
@@ -38,7 +38,7 @@ pipeline {
 
                     // Forma 1: Usando docker build para misma plataforma del host
 
-                    sh 'docker build --help'
+                    // sh 'docker build --help'
                     sh "docker build -t danycenas/${pom.artifactId}:${pom.version} ."
                     sh 'docker images'
 
