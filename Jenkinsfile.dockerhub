@@ -22,6 +22,9 @@ pipeline {
                     args '--group-add 988 -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
+            environment {
+                DOCKER_CONFIG = "${WORKSPACE}/.docker"
+            }            
             options { skipDefaultCheckout() }
             steps {
                 sh 'ls -la'
