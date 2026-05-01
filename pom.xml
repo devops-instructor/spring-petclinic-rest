@@ -175,11 +175,11 @@
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.mycompany</groupId>
             <artifactId>ldap-authentication</artifactId>
             <version>1.0.0</version>
-        </dependency> -->
+        </dependency>
     </dependencies>
 
     <reporting>
