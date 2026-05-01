@@ -1,0 +1,27 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.15-eclipse-temurin-21'
+        }
+    }
+    environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+    }    
+    stages {
+        stage('Package') {
+            steps {
+                sh 'mvn clean package -B -ntp -DskipTests'
+            }
+        }       
+        stage('DockerHub') {
+            steps {
+                echo 'DockerHub'
+            }
+        }        
+    }
+    post { 
+        cleanup {
+            cleanWs()
+        }
+    }
+}
