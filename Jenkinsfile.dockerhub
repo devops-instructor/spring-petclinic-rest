@@ -35,13 +35,11 @@ pipeline {
                 script {
 
                     def pom = readMavenPom file: 'pom.xml'
+                    def image = "danycenas/${pom.artifactId}"
 
                     // Forma 1: Usando comandos Docker directamente
 
                     // sh 'docker build --help'
-
-                    def image = "danycenas/${pom.artifactId}"
-
                     // sh "docker build -t ${image}:${pom.version} . -t ${image}:latest"
                     // sh 'docker images'
 
