@@ -15,6 +15,7 @@ pipeline {
             }
         }       
         stage('DockerHub') {
+            agent any
             steps {
                 echo 'Publishing to DockerHub...'
             }
