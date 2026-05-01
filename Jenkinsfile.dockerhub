@@ -24,6 +24,7 @@ pipeline {
             }
             environment {
                 DOCKER_CONFIG = "${WORKSPACE}/.docker"
+                DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
             }            
             options { skipDefaultCheckout() }
             steps {
@@ -40,6 +41,10 @@ pipeline {
                     sh 'docker build --help'
                     sh "docker build -t danycenas/${pom.artifactId}:${pom.version} ."
                     sh 'docker images'
+
+                    sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
+                    sh "docker push danycenas/${pom.artifactId}:${pom.version}"
+                    sh 'docker logout'
 
                     // def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
                     // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
