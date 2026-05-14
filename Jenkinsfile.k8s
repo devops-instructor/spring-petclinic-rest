@@ -2,7 +2,7 @@ pipeline {
   agent {
     kubernetes {
       yamlFile 'KubernetesPod.yaml'
-      retries 2
+      defaultContainer 'maven'
     }
   }
   stages {
@@ -11,8 +11,8 @@ pipeline {
         container('maven') {
           sh 'mvn -version'
         }
-        container('busybox') {
-          sh '/bin/busybox'
+        container('docker') {
+          sh 'docker version'
         }
       }
     }
