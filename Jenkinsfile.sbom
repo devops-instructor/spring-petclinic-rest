@@ -4,17 +4,18 @@ pipeline {
             image 'maven:3.9.15-eclipse-temurin-21'
         }
     }
-    triggers{
-        cron('H/10 * * * *')
-    }
+    // triggers{
+    //     cron('H/10 * * * *')
+    // }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
-        DTRACK_BASE_URL = 'http://54.188.108.192:9091'
-        DTRACK_API_KEY  = credentials('dependencytrack-token')
+        DTRACK_BASE_URL = 'http://35.93.146.117:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
     }
     stages {
         stage('Generate SBOM') {
             steps {
+                sh 'env | sort'
                 sh 'mvn -U -B -ntp cyclonedx:makeAggregateBom'
 
                 script {
