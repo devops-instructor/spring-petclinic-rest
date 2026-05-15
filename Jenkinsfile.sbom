@@ -5,7 +5,7 @@ pipeline {
         }
     }
     triggers{
-        cron('H/2 * * * *')
+        cron('H/10 * * * *')
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
