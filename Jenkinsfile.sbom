@@ -9,8 +9,8 @@ pipeline {
     // }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
-        DTRACK_BASE_URL = 'http://35.93.146.117:9091'
-        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+        // DTRACK_BASE_URL = 'http://35.93.146.117:9091'
+        // DTRACK_API_KEY  = credentials('dependencytrack-credentials')
     }
     stages {
         stage('Generate SBOM') {
@@ -28,9 +28,9 @@ pipeline {
                     artifact: 'target/bom.json',
                     projectName: env.ARTIFACT_ID,
                     projectVersion: env.VERSION,
-                    dependencyTrackUrl: env.DTRACK_BASE_URL,
-                    dependencyTrackApiKey: env.DTRACK_API_KEY,
-                    autoCreateProjects: true,
+                    // dependencyTrackUrl: env.DTRACK_BASE_URL,
+                    // dependencyTrackApiKey: env.DTRACK_API_KEY,
+                    // autoCreateProjects: true,
                     synchronous: true
                 )
             }
