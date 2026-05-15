@@ -8,6 +8,7 @@ pipeline {
     //     cron('H/2 * * * *')
     // }
     environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
         DTRACK_BASE_URL = 'http://54.188.108.192:9091'
         DTRACK_API_KEY  = credentials('dependencytrack-token')
     }
