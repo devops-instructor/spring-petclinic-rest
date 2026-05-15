@@ -4,9 +4,9 @@ pipeline {
             image 'maven:3.9.15-eclipse-temurin-21'
         }
     }
-    // triggers{
-    //     cron('H/2 * * * *')
-    // }
+    triggers{
+        cron('H/2 * * * *')
+    }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
         DTRACK_BASE_URL = 'http://54.188.108.192:9091'
