@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.15-eclipse-temurin-21'
+        }
+    }
+    // triggers{
+    //     cron('H/2 * * * *')
+    // }
+    environment {
+        DTRACK_BASE_URL = 'http://54.188.108.192:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-token')
+    }
+    stages {
+        stage('Generate SBOM') {
+            steps {
+                sh 'mvn -U -B -ntp cyclonedx:makeAggregateBom'
+
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT_ID = pom.artifactId
+                    env.VERSION     = pom.version
+                }             
+
+                dependencyTrackPublisher(
+                    artifact: 'target/bom.json',
+                    projectName: env.ARTIFACT_ID,
+                    projectVersion: env.VERSION,
+                    dependencyTrackUrl: env.DTRACK_BASE_URL,
+                    dependencyTrackApiKey: env.DTRACK_API_KEY,
+                    autoCreateProjects: true,
+                    synchronous: true
+                )
+            }
+            post {
+                success { 
+                    archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+                }
+            }
+        }     
+    }
+}
