@@ -1,0 +1,72 @@
+pipeline {
+    agent none
+    stages {
+        stage('Build Artifact') {
+            agent {
+                docker {
+                    image 'maven:3.9.15-eclipse-temurin-21'
+                }
+            }
+            environment {
+                MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+            }
+            steps {
+                sh 'mvn -U -B -ntp -DskipTests clean package'
+            }
+        }
+        stage('Build Image') {
+            agent {
+                docker {
+                    image 'docker:29.5.1-cli-alpine3.23'
+                    args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            steps {
+
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT_ID = pom.artifactId
+                    env.VERSION     = pom.version
+                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
+                }
+
+                sh 'docker build --pull -t "$IMAGE" .'
+            }
+        }
+        stage('Scan Image (Generate SBOM)') {
+            agent {
+                docker {
+                    image 'aquasec/trivy:0.70.0'
+                    args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            environment {
+                TRIVY_DISABLE_VEX_NOTICE = 'true'
+            }
+            steps {
+                sh '''
+                    trivy image "$IMAGE" \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 0 \
+                        --no-progress \
+                        --format table -o trivy-image.txt
+
+                    cat trivy-image.txt
+                '''
+            }
+            post {
+                always { 
+                    archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
+                    cleanWs()
+                }
+            }
+        }
+    }
+}
