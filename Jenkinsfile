@@ -39,6 +39,13 @@ pipeline {
                 sh 'mvn package -DskipTests -B -ntp'
             }
         }
+        stage('SonarQube') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh 'org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp'
+                }
+            }
+        }        
     }
     post {
         always {
