@@ -19,14 +19,19 @@ pipeline {
                 sh 'mvn test -B -ntp'
             }
             post {
-                always {
+                success {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
         stage('Coverage') {
             steps {
-                sh 'jacoco:report -B -ntp'
+                sh 'mvn jacoco:report -B -ntp'
+            }
+            post {
+                success {
+                    recordCoverage(tools: [[parser: 'JACOCO']])
+                }
             }
         }        
         stage('Package') {
