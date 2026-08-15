@@ -3,6 +3,10 @@ pipeline {
     tools {
         maven 'maven3.9.16'
     }
+    triggers {
+        // cron('* * * * *')
+        githubPush()
+    }
     stages {
         // stage('Checkout SCM') {
         //     steps {
