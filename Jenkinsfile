@@ -42,7 +42,7 @@ pipeline {
         stage('SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp'
+                    sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp'
                 }
             }
         }        
