@@ -50,7 +50,7 @@ pipeline {
                     script {
                         if (env.CHANGE_ID) {
                             sh """
-                                mvn sonar:sonar -B -ntp \
+                                mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp \
                                 -Dsonar.pullrequest.key=${env.CHANGE_ID} \
                                 -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} \
                                 -Dsonar.pullrequest.base=${env.CHANGE_TARGET}
