@@ -64,13 +64,13 @@ pipeline {
                 }
             }
         }
-        // stage('SonarQube') {
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -ntp'
-        //         }
-        //     }
-        // }        
+        stage("Quality Gate"){
+            steps{
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }      
     }
     post {
         always {
