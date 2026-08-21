@@ -13,8 +13,8 @@ pipeline {
         githubPush()
     }
     environment {
-        HOME = "${WORKSPACE}"
-        // MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+        // HOME = "${WORKSPACE}"
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository -Duser.home=${WORKSPACE}"
         // SONAR_USER_HOME = "${WORKSPACE}/.sonar"
     }    
     stages {
