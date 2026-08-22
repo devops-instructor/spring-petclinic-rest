@@ -1,0 +1,27 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.16-eclipse-temurin-21'
+        }
+    }
+    environment {
+        HOME = "${WORKSPACE}"
+        // MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository"
+        // SONAR_USER_HOME = "${WORKSPACE}/.sonar"
+    } 
+    stages {      
+        stage('Package') {
+            steps {
+                sh 'mvn clean package -DskipTests -B -ntp'
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        cleanup {
+            cleanWs()
+        }
+    }
+}
