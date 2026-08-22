@@ -12,6 +12,11 @@ pipeline {
         // cron('* * * * *')
         githubPush()
     }
+    environment {
+        HOME = "${WORKSPACE}"
+        // MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository"
+        // SONAR_USER_HOME = "${WORKSPACE}/.sonar"
+    } 
     stages {
         // stage('Checkout SCM') {
         //     steps {
