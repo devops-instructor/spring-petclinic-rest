@@ -9,6 +9,7 @@ pipeline {
         HOME = "${WORKSPACE}"
         // MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository"
         // SONAR_USER_HOME = "${WORKSPACE}/.sonar"
+        ARTIFACTORY_CREDENTIALS = credentials('artifactory-credentials')
     } 
     stages {      
         // stage('Forma 1 - Artifactory - RtMaven') {
@@ -43,12 +44,12 @@ pipeline {
             steps {
                 echo 'Forma 2 - Artifactory - File Spec'
 
-                sh 'mvn clean package -B -DskipTests'
+                // sh 'mvn clean package -B -DskipTests' // Resolve maven central dependencies and build the project
 
-                // withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
-                //     sh 'env | sort'
-                //     sh 'mvn clean package -B -DskipTests -s ${M2_SETTINGS}'
-                // }                
+                withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
+                    sh 'env | sort'
+                    sh 'mvn clean package -B -DskipTests -s ${M2_SETTINGS}'
+                }                
 
                 script{
                     def releaseRepo = 'spring-petclinic-rest-release'
