@@ -9,19 +9,19 @@ pipeline {
         NEXUS_CREDENTIALS = credentials('nexus-credentials')
     }    
     stages {
-        stage('Package') {
-            steps {
-                sh 'mvn clean package -B -ntp -DskipTests'
-            }
-        }
         // stage('Package') {
         //     steps {
-        //         withCredentials([file(credentialsId: 'nexus-settings', variable: 'M2_SETTINGS')]) {
-        //             sh 'env | sort'
-        //             sh 'mvn clean package -B -U -ntp -DskipTests -s ${M2_SETTINGS}'
-        //         }
+        //         sh 'mvn clean package -B -ntp -DskipTests'
         //     }
         // }
+        stage('Package') {
+            steps {
+                withCredentials([file(credentialsId: 'nexus-settings', variable: 'M2_SETTINGS')]) {
+                    sh 'env | sort'
+                    sh 'mvn clean package -B -U -ntp -DskipTests -s ${M2_SETTINGS}'
+                }
+            }
+        }
         stage('Nexus') {
             steps {
                 script {
