@@ -18,7 +18,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'nexus-settings', variable: 'M2_SETTINGS')]) {
                     sh 'env | sort'
-                    sh 'mvn clean package -B -U -DskipTests -s ${M2_SETTINGS}'
+                    sh 'mvn clean package -B -U -ntp -DskipTests -s ${M2_SETTINGS}'
                 }
             }
         }
