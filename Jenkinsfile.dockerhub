@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh 'mvn clean package -B -ntp -DskipTests'
             }
-        }       
+        }
         stage('DockerHub') {
             agent {
                 docker {
