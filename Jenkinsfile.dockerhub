@@ -40,22 +40,22 @@ pipeline {
 
                     // Forma 1: Usando comandos Docker directamente
 
-                    sh 'docker build --help'
-                    sh "docker build -t ${image}:${pom.version} . -t ${image}:latest"
-                    sh 'docker images'
+                    // sh 'docker build --help'
+                    // sh "docker build -t ${image}:${pom.version} . -t ${image}:latest"
+                    // sh 'docker images'
 
-                    sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
-                    sh "docker push ${image}:${pom.version}"
-                    sh "docker push ${image}:latest"
-                    sh 'docker logout'
+                    // sh 'echo "$DOCKERHUB_CREDENTIALS_PSW" | docker login -u "$DOCKERHUB_CREDENTIALS_USR" --password-stdin'
+                    // sh "docker push ${image}:${pom.version}"
+                    // sh "docker push ${image}:latest"
+                    // sh 'docker logout'
 
                     // Forma 2: Usando el plugin de Docker de Jenkins
 
-                    // def app = docker.build("${image}:${pom.version}")
-                    // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
-                    //     app.push()
-                    //     app.push('latest')
-                    // }
+                    def app = docker.build("${image}:${pom.version}")
+                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                        app.push()
+                        app.push('latest')
+                    }
 
                     // Forma 3: Usando docker buildx para multiplatforma
                     
