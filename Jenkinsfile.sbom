@@ -8,7 +8,8 @@ pipeline {
         cron('H/3 * * * *')
     }
     environment {
-        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+        // MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+        HOME = "${WORKSPACE}"
     }
     stages {
         stage('Generate SBOM') {
