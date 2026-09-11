@@ -1,0 +1,39 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.16-eclipse-temurin-21'
+        }
+    }
+    triggers{
+        cron('H/10 * * * *')
+    }
+    environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2"
+    }
+    stages {
+        stage('Generate SBOM') {
+            steps {
+                sh 'env | sort'
+                sh 'mvn -U -B -ntp cyclonedx:makeAggregateBom'
+
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT_ID = pom.artifactId
+                    env.VERSION     = pom.version
+                }             
+
+                dependencyTrackPublisher(
+                    artifact: 'target/bom.json',
+                    projectName: env.ARTIFACT_ID,
+                    projectVersion: env.VERSION,
+                    synchronous: true
+                )
+            }
+            post {
+                success { 
+                    archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+                }
+            }
+        }     
+    }
+}
