@@ -22,9 +22,12 @@ spec:
         - name: spring-petclinic-rest
           imagePullPolicy: Always
           resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
             limits:
-              cpu: "0.5"
-              memory: "1Gi"
+              cpu: "500m"
+              memory: "512Mi"
           image: danycenas/spring-petclinic-rest:latest
           ports:
             - containerPort: 9966
