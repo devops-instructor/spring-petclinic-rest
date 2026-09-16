@@ -37,7 +37,8 @@ pipeline {
                                 --context=$(pwd) \
                                 --dockerfile=$(pwd)/Dockerfile \
                                 --destination="$IMAGE_VERSION" \
-                                --destination="$IMAGE_LATEST"
+                                --destination="$IMAGE_LATEST" \
+                                --log-format=text
                             '''
                         }
                     }
