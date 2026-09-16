@@ -13,37 +13,28 @@ pipeline {
             }
         }
         stage("Publish Artifacts on Docker") {
-            environment {
-                HOME = "${WORKSPACE}"
-            }
             steps {
-                container('buildkit') {
+                container('kaniko') {
                     script {
                         def pom = readMavenPom file: 'pom.xml'
                         def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
-                        def imageLatest = "danycenas/${pom.artifactId}:latest"
-
                         env.IMAGE_VERSION = imageVersion
 
-                        withCredentials([
-                            usernamePassword(
-                                credentialsId: 'dockerhub-credentials',
-                                usernameVariable: 'DOCKER_USERNAME',
-                                passwordVariable: 'DOCKER_PASSWORD'
-                            )
-                        ]) {
+                        withCredentials([usernamePassword(
+                            credentialsId: 'dockerhub-credentials',
+                            usernameVariable: 'DOCKER_USERNAME',
+                            passwordVariable: 'DOCKER_PASSWORD'
+                        )]) {
                             sh '''
-                                mkdir -p ~/.docker
-
                                 AUTH=$(printf "%s:%s" "$DOCKER_USERNAME" "$DOCKER_PASSWORD" | base64 | tr -d '\\n')
+                                mkdir -p /kaniko/.docker
+                                printf '{"auths":{"https://index.docker.io/v1/":{"auth":"%s"}}}' "$AUTH" > /kaniko/.docker/config.json
 
-                                printf '{"auths":{"https://index.docker.io/v1/":{"auth":"%s"}}}' "$AUTH" > ~/.docker/config.json
-
-                                buildctl-daemonless.sh build \
-                                --frontend dockerfile.v0 \
-                                --local context=. \
-                                --local dockerfile=. \
-                                --output type=image,name=${IMAGE_VERSION},push=true
+                                /kaniko/executor \
+                                --context=$(pwd) \
+                                --dockerfile=$(pwd)/Dockerfile \
+                                --destination=${IMAGE_VERSION} \
+                                --destination=danycenas/${pom.artifactId}:latest
                             '''
                         }
                     }

@@ -32,10 +32,8 @@ spec:
         - cat
       tty: true
 
-    - name: buildkit
-      image: moby/buildkit:rootless
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:debug
       command:
         - sh
-        - -c
-        - cat
       tty: true
