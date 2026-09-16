@@ -13,6 +13,9 @@ pipeline {
             }
         }
         stage("Publish Artifacts on Docker") {
+            environment {
+                HOME = "${WORKSPACE}"
+            }
             steps {
                 container('buildkit') {
                     script {
