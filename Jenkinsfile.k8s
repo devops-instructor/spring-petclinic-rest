@@ -17,8 +17,11 @@ pipeline {
                 container('kaniko') {
                     script {
                         def pom = readMavenPom file: 'pom.xml'
-                        def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
-                        env.IMAGE_VERSION = imageVersion
+                        def artifactId = pom.artifactId
+                        def version = pom.version
+
+                        env.IMAGE_VERSION = "danycenas/${artifactId}:${version}"
+                        env.IMAGE_LATEST  = "danycenas/${artifactId}:latest"
 
                         withCredentials([usernamePassword(
                             credentialsId: 'dockerhub-credentials',
@@ -33,8 +36,8 @@ pipeline {
                                 /kaniko/executor \
                                 --context=$(pwd) \
                                 --dockerfile=$(pwd)/Dockerfile \
-                                --destination=$IMAGE_VERSION \
-                                --destination=$IMAGE_LATEST
+                                --destination="$IMAGE_VERSION" \
+                                --destination="$IMAGE_LATEST"
                             '''
                         }
                     }
