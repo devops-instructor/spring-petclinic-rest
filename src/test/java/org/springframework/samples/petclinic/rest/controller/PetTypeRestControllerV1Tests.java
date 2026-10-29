@@ -104,12 +104,11 @@ class PetTypeRestControllerV1Tests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").value("cat2"));
+            .andExpect(jsonPath("$.name").value("cat"));
     }
 
     @Test
     @WithMockUser(roles="VET_ADMIN")
-    @Disabled
     void testGetPetTypeSuccessAsVetAdmin() throws Exception {
         given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
         this.mockMvc.perform(get("/api/pettypes/1")
