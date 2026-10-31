@@ -10,6 +10,7 @@ pipeline {
     }
     environment {
         MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository"
+        SONAR_USER_HOME = "${WORKSPACE}/.sonar"
     }
     triggers {
         githubPush()
