@@ -8,6 +8,9 @@ pipeline {
             image 'maven:3.9.16-eclipse-temurin-21'
         }
     }
+    environment {
+        MAVEN_OPTS = "-Dmaven.repo.local=${WORKSPACE}/.m2/repository"
+    }
     triggers {
         githubPush()
     }
