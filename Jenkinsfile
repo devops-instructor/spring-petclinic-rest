@@ -16,11 +16,6 @@ pipeline {
         githubPush()
     }
     stages {
-        // stage('Checkout SCM') {
-        //     steps {
-        //         git branch: 'master', url : 'https://github.com/devops-instructor/spring-petclinic-rest.git'
-        //     }
-        // }
         stage('Compile') {
             steps {
                 sh 'mvn clean compile -B -ntp'
