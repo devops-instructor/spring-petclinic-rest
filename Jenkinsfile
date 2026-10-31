@@ -41,6 +41,14 @@ pipeline {
             steps {
                 sh 'mvn package -DskipTests -B -ntp'
             }
-        }        
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        cleanup {
+            cleanWs()
+        }
     }
 }
