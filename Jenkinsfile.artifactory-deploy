@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+        docker {
+            image 'alpine/curl:8.23.0'
+        }
+    }
+    environment {
+        HOME = "${WORKSPACE}"
+    }    
+    stages {
+        stage('Download Artifactory CLI') {
+            steps {
+                echo "Downloading Artifactory CLI..."
+            }
+        }     
+    }
+    post { 
+        cleanup {
+            cleanWs()
+        }
+    }
+}
