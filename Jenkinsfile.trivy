@@ -50,16 +50,25 @@ pipeline {
                 TRIVY_DISABLE_VEX_NOTICE = 'true'
             }
             steps {
+                // sh '''
+                //     trivy image "$IMAGE" \
+                //         --severity HIGH,CRITICAL \
+                //         --ignore-unfixed \
+                //         --exit-code 0 \
+                //         --no-progress \
+                //         --format table -o trivy-image.txt
+
+                //     cat trivy-image.txt
+                // '''
                 sh '''
                     trivy image "$IMAGE" \
-                        --severity HIGH,CRITICAL \
-                        --ignore-unfixed \
-                        --exit-code 0 \
+                        --pkg-types os,library \
+                        --scanners vuln \
                         --no-progress \
                         --format table -o trivy-image.txt
 
                     cat trivy-image.txt
-                '''
+                '''                
             }
             post {
                 always { 
