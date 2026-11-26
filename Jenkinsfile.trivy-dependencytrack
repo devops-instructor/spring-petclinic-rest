@@ -54,6 +54,8 @@ pipeline {
                     # Genera SBOM CycloneDX desde la imagen Docker usando `trivy image`.
                     # Nota: este modo es vulnerability-scan first; el SBOM es un formato de salida.
                     trivy image "$IMAGE" \
+                        --pkg-types os,library \
+                        --scanners vuln \
                         --format cyclonedx \
                         --output trivy-image-bom.json \
                         --no-progress
