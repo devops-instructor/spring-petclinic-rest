@@ -5,7 +5,7 @@ pipeline {
         }
     }
     triggers{
-        cron('H/25 * * * *')
+        cron('H/2 * * * *')
     }
     environment {
         HOME = "${WORKSPACE}"
